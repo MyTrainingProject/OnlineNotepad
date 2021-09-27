@@ -1,0 +1,9 @@
+<?php
+
+$sql = 'DELETE FROM tasks WHERE id=:id';
+$pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
+$statement = $pdo->prepare($sql);
+$result = $statement->execute($_GET);
+header('Location: /level01/index.php'); exit;
+
+?>
