@@ -1,9 +1,16 @@
 <?php
-$pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-$statement = $pdo->prepare("SELECT * FROM tasks WHERE id=:id");
-//$statement->bindParam(":id", $_GET['id']);//старый способ
-$statement->execute($_GET);
-$task = $statement->fetch(PDO::FETCH_ASSOC);
+function getTask($id)
+{
+    $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
+    $statement = $pdo->prepare("SELECT * FROM tasks WHERE id=:id");
+    $statement->bindParam(":id", $id);//старый способ
+    $statement->execute();
+    $task = $statement->fetch(PDO::FETCH_ASSOC);
+    return $task;
+}
+
+$task = getTask($_GET['id']);
+
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +27,7 @@ $task = $statement->fetch(PDO::FETCH_ASSOC);
         <div class="col-md-12">
             <h1><?= $task['title'] ?></h1>
             <p><?= $task['content'] ?></p>
-            <a href="/level01/index.php">Go Back</a>
+            <a href="/Online_notepad/index.php">Go Back</a>
         </div>
     </div>
 </div>
