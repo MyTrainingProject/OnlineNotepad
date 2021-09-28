@@ -1,15 +1,11 @@
 
 <?php
-function getTask($id)
-{
-    $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-    $statement = $pdo->prepare("SELECT * FROM tasks WHERE id=:id");
-    $statement->bindParam(":id", $id);//старый способ
-    $statement->execute();
-    $task = $statement->fetch(PDO::FETCH_ASSOC);
-    return $task;
-}
-$task = getTask($_GET['id']);
+
+require 'database/QueryBuilder.php';
+
+$db = new QueryBuilder();
+
+$task = $db->getTask($_GET['id']);
 ?>
 
 <!DOCTYPE html>

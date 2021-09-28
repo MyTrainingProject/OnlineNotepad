@@ -1,17 +1,10 @@
 <?php
-//1.connect
 
-function getAllTasks()
-{
-    $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-    $sql = "SELECT * FROM tasks";
-    $statement = $pdo->prepare($sql);
-    $result = $statement->execute();//возвращает true или false
-    $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);//получить все данные в виде ассциативного массива
-    return $tasks;
-}
-$tasks = getAllTasks();
-var_dump($tasks);
+
+require 'database/QueryBuilder.php';
+$db = new QueryBuilder();
+
+$tasks = $db->getAllTasks();
 
 ?>
 <!DOCTYPE html>
