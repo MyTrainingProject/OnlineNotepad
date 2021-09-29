@@ -2,57 +2,69 @@
 
 class QueryBuilder
 {
-    function getAllTasks()
+    public $pdo;
+    function __construct()
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-        $sql = "SELECT * FROM tasks";
-        $statement = $pdo->prepare($sql);
+        $this->pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
+
+    }
+    function store($table, $data)
+    {
+        $stringOfQuery = implode(', ', array_keys($data)) ;
+        var_dump($stringOfQuery);
+        $placeholders = ":" . implode(', :', array_keys($data));
+        $sql = "INSERT INTO $table($stringOfQuery) VALUES ($placeholders)";//:title, :content затем заменяются значениями ниже через bindParam
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($data);
+
+        header('Location: /Online_notepad/index.php'); exit;
+
+    }
+
+
+    function all($table)
+    {
+        $sql = "SELECT *  FROM $table";
+        $statement = $this->pdo->prepare($sql);
         $result = $statement->execute();//возвращает true или false
         $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);//получить все данные в виде ассциативного массива
         return $tasks;
     }
 
 
-    function getTask($id)
+    function getOne($table, $id)
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-        $statement = $pdo->prepare("SELECT * FROM tasks WHERE id=:id");
+        $statement = $this->pdo->prepare("SELECT * FROM $table WHERE id=:id");
         $statement->bindParam(":id", $id);//старый способ
         $statement->execute();
         $task = $statement->fetch(PDO::FETCH_ASSOC);
         return $task;
     }
 
-    function deleteTask($id)
+    function delete($table, $id)
     {
-        $sql = 'DELETE FROM tasks WHERE id=:id';
-        $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-        $statement = $pdo->prepare($sql);
+        $sql = "DELETE FROM $table WHERE id=:id";
+        $statement = $this->pdo->prepare($sql);
         $statement->bindParam(":id", $id);
         $result = $statement->execute();
         header('Location: /Online_notepad/index.php'); exit;
 
     }
 
-    function updateTask($data)
+    function update($table, $data)
     {
-        $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-        $sql = 'UPDATE tasks SET title=:title, content=:content WHERE id=:id';
-        $statement = $pdo->prepare($sql);
+        $stringOfQuery = '';
+        foreach (array_keys($data) as $item)
+        {
+            $stringOfQuery = "$stringOfQuery $item=:$item,";
+        }
+        $stringOfQuery = rtrim($stringOfQuery, ',');
+        $sql = "UPDATE $table SET $stringOfQuery WHERE id=:id";
+        $statement = $this->pdo->prepare($sql);
         $result = $statement->execute($data);
         header('Location: /Online_notepad/index.php'); exit;
     }
 
-    function addTask($data)
-    {
-        $pdo = new PDO("mysql:host=localhost; dbname=test", "root", "root");
-        $sql = "INSERT INTO tasks (title, content) VALUES (:title, :content)";//:title, :content затем заменяются значениями ниже через bindParam
-        $statement = $pdo->prepare($sql);
-        $statement->execute($data);
-
-        header('Location: /Online_notepad/index.php'); exit;
-
-    }
 
 
 }

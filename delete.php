@@ -3,5 +3,5 @@
 require 'database/QueryBuilder.php';
 
 $db = new QueryBuilder();
-$db->deleteTask($_GET['id']);
+$db->delete('tasks', $_GET['id']);
 ?>

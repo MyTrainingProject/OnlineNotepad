@@ -10,5 +10,5 @@ $data = [
 
 
 $db = new QueryBuilder();
-$db->updateTask($data);
+$db->update('tasks', $data);
 ?>
